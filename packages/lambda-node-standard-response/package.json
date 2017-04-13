@@ -1,6 +1,6 @@
 {
   "name": "@wmakeev/lambda-node-standard-response",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Standard response spec implementation for aws lambda node functions",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
@@ -28,11 +28,11 @@
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
-    "tap-spec": "^4.1.1",
-    "nyc": "^10.2.0",
     "eslint": "^3.18.0",
     "eslint-config-standard": "^7.1.0",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^2.1.1"
+    "eslint-plugin-standard": "^2.1.1",
+    "nyc": "^10.2.0",
+    "tap-spec": "^4.1.1"
   }
 }
