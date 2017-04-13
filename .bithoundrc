@@ -1,0 +1,9 @@
+{
+  "test": [
+    "packages/*/src/**/__tests__/**"
+  ],
+  "ignore": [
+    "lib/**",
+    "dist/**"
+  ]
+}
