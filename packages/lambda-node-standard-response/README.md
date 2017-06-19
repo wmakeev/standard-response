@@ -28,7 +28,7 @@ function doStuffAsync (ev) {
 
 exports.default = standardResponse(function (ev, ctx) {
   return ev.async ? doStuffAsync(ev) : doStuff(ev)
-})
+}, { debug: true })
 ```
 
 `doStuff` can be sync or async (in case of async it should return `Promise`)
@@ -49,7 +49,7 @@ Lambda response (same in sync and async cases):
 {
   "ok": true,
   "result": "Hello world!",
-  "format": "1.0"
+  "format": "1.1"
 }
 ```
 
@@ -58,7 +58,20 @@ Lambda response in the case `standardResponse` caught an error:
 ```json
 {
   "ok": false,
-  "description": "Some error message",
-  "format": "1.0"
+  "description": "Some error message", // equal to error.message field or 'Unknown error' (if handler returns not Error type or string type error)
+  "error_code": "some code",           // include if Error object `code` field is defined
+  "stack": ['stack trace lines'],      // include if `options.debug` is true
+  "format": "1.1"
 }
 ```
+
+## API
+
+### `standardResponse(handler: function(ev, context), options: object): function(event, context, cb)`
+
+- `handler` - sync or async (returns Promise) function
+- `options.debug` - `boolean` value (if `true`, then error response will include `stack` property)
+
+**returns:**
+
+You `handler` wrapped in AWS Lambda standard handler style function `function(event, context, cb)`

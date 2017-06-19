@@ -65,7 +65,7 @@ test('standard response success result (sync)', t => {
     t.deepEqual(data, {
       ok: true,
       result: { event: ev, context: ctx },
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -81,7 +81,7 @@ test('standard response success result (async)', t => {
     t.deepEqual(data, {
       ok: true,
       result: { event: ev, context: ctx },
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -96,7 +96,7 @@ test('standard response catch error (sync)', t => {
     t.deepEqual(data, {
       ok: false,
       description: 'Some error',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -111,7 +111,7 @@ test('standard response catch error (async)', t => {
     t.deepEqual(data, {
       ok: false,
       description: 'Some error',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -127,7 +127,7 @@ test('standard response catch error with code (sync)', t => {
       ok: false,
       error_code: 404,
       description: 'Some error with code',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -143,7 +143,7 @@ test('standard response catch error with code (async)', t => {
       ok: false,
       error_code: 404,
       description: 'Some error with code',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -158,7 +158,7 @@ test('standard response catch text error (sync)', t => {
     t.deepEqual(data, {
       ok: false,
       description: 'Some text error',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -173,7 +173,7 @@ test('standard response catch text error (async)', t => {
     t.deepEqual(data, {
       ok: false,
       description: 'Some text error',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -188,8 +188,7 @@ test('standard response catch object error (async)', t => {
     t.deepEqual(data, {
       ok: false,
       description: 'Unknown error',
-      error: { error: true },
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -204,8 +203,21 @@ test('standard response catch inner throw (async)', t => {
     t.deepEqual(data, {
       ok: false,
       description: 'Some error thrown',
-      format: '1.0'
+      format: '1.1'
     }, 'cb data argument should meet the specification')
+    t.end()
+  })
+})
+
+test('standard response this stack (async)', t => {
+  let lambdaHandler = standardLambdaResponse(funcAsync, { debug: true })
+  let ev = { type: 'throw' }
+
+  lambdaHandler(ev, null, function (err, data) {
+    t.equal(err, null, 'cb error argument should be null')
+    t.equal(data.ok, false)
+    t.ok(data.stack instanceof Array)
+    t.equal(data.stack[0], 'Error: Some error thrown')
     t.end()
   })
 })

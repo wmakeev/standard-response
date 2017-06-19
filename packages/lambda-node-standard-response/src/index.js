@@ -2,36 +2,44 @@
 
 const isPromise = require('is-promise')
 
-function makeCb (err, data, cb) {
-  let response = {
-    format: '1.0'
-  }
+const FORMAT = '1.1'
 
-  if (err) {
-    if (typeof err === 'string') {
-      err = new Error(err)
-    } else if (!(err instanceof Error)) {
-      response.error = err
-      err = new Error('Unknown error')
+function getMakeCb (options) {
+  let debug = !!options.debug
+
+  return function makeCb (err, data, cb) {
+    let response = {
+      format: FORMAT
     }
 
-    Object.assign(response, {
-      ok: false,
-      description: err.message
-    })
+    if (err) {
+      if (typeof err === 'string') {
+        err = new Error(err)
+      } else if (!(err instanceof Error)) {
+        err = new Error('Unknown error')
+      }
 
-    if (err.code != null) response.error_code = err.code
-  } else {
-    Object.assign(response, {
-      ok: true,
-      result: data
-    })
+      Object.assign(response, {
+        ok: false,
+        description: err.message
+      })
+
+      if (debug && err.stack) response.stack = String(err.stack).split(/\n/)
+
+      if (err.code != null) response.error_code = err.code
+    } else {
+      Object.assign(response, {
+        ok: true,
+        result: data
+      })
+    }
+
+    return cb(null, response)
   }
-
-  return cb(null, response)
 }
 
-module.exports = function lambdaNodeStandardResponse (handler) {
+module.exports = function lambdaNodeStandardResponse (handler, options) {
+  let makeCb = getMakeCb(options || {})
   return function (ev, ctx, cb) {
     try {
       let result = handler(ev, ctx)
