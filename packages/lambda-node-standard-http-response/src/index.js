@@ -17,6 +17,10 @@ module.exports = function lambdaNodeStandardHttpResponse (handler, options) {
         // "headers": { "headerName": "headerValue", ... },
       }
 
+      if (options.headers) {
+        response.headers = options.headers
+      }
+
       if (response.isBase64Encoded && result.ok) {
         response.body = result.result
       } else {

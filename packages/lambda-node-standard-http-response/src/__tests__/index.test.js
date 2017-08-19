@@ -111,3 +111,22 @@ test('standard http response success base64 result', t => {
     t.end()
   })
 })
+
+test('standard http response (success, headers)', t => {
+  let lambdaHandler = standardLambdaHttpResponse(handler, {
+    headers: { foo: 'bar' }
+  })
+  let ev = { type: 'ok' }
+
+  lambdaHandler(ev, null, function (err, data) {
+    t.equal(err, null, 'cb error argument should be null')
+
+    t.deepEqual(data, {
+      isBase64Encoded: false,
+      statusCode: 200,
+      headers: { foo: 'bar' },
+      body: '{"format":"1.1","ok":true,"result":{"event":{"type":"ok"},"context":null}}'
+    })
+    t.end()
+  })
+})
