@@ -2,7 +2,7 @@
 
 const isPromise = require('is-promise')
 
-const FORMAT = '1.1'
+const FORMAT = '1.2'
 
 function getMakeCb (options) {
   let debug = !!options.debug
@@ -16,7 +16,9 @@ function getMakeCb (options) {
       if (typeof err === 'string') {
         err = new Error(err)
       } else if (!(err instanceof Error)) {
-        err = new Error('Unknown error')
+        let message = (err && err.message && typeof err.message === 'string')
+          ? err.message : 'Unknown error'
+        err = new Error(message)
       }
 
       Object.assign(response, {
@@ -24,7 +26,9 @@ function getMakeCb (options) {
         description: err.message
       })
 
-      if (debug && err.stack) response.stack = String(err.stack).split(/\n/)
+      if (err.name) response.name = err.name
+
+      if (debug) response.stack = String(err.stack).split(/\n/)
 
       if (err.code != null) response.error_code = err.code
     } else {

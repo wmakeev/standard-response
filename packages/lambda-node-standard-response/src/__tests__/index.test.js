@@ -3,6 +3,8 @@
 let test = require('blue-tape')
 let standardLambdaResponse = require('..')
 
+let FORMAT = '1.2'
+
 let funcSync = function (ev, ctx) {
   switch (ev.type) {
     case 'ok':
@@ -15,6 +17,11 @@ let funcSync = function (ev, ctx) {
       let errorWithCode = new Error('Some error with code')
       errorWithCode.code = 404
       throw errorWithCode
+
+    case 'error-name':
+      let errorWithName = new Error('Some error with name')
+      errorWithName.name = 'SomeNamedError'
+      throw errorWithName
 
     case 'error-text':
       /* eslint prefer-promise-reject-errors:0, no-throw-literal:0 */
@@ -42,7 +49,11 @@ let funcAsync = function (ev, ctx) {
 
       case 'error-obj':
         /* eslint prefer-promise-reject-errors:0 */
-        return reject({ error: true })
+        return reject({ message: 'Some error object', error: true })
+
+      case 'error-obj2':
+        /* eslint prefer-promise-reject-errors:0 */
+        return reject({ message: {}, error: true })
 
       case 'throw':
         throw new Error('Some error thrown')
@@ -65,7 +76,7 @@ test('standard response success result (sync)', t => {
     t.deepEqual(data, {
       ok: true,
       result: { event: ev, context: ctx },
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -81,7 +92,7 @@ test('standard response success result (async)', t => {
     t.deepEqual(data, {
       ok: true,
       result: { event: ev, context: ctx },
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -95,8 +106,9 @@ test('standard response catch error (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       description: 'Some error',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -110,8 +122,9 @@ test('standard response catch error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       description: 'Some error',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -125,9 +138,10 @@ test('standard response catch error with code (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       error_code: 404,
       description: 'Some error with code',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -141,9 +155,26 @@ test('standard response catch error with code (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       error_code: 404,
       description: 'Some error with code',
-      format: '1.1'
+      format: FORMAT
+    }, 'cb data argument should meet the specification')
+    t.end()
+  })
+})
+
+test('standard response catch error with name (sync)', t => {
+  let lambdaHandler = standardLambdaResponse(funcSync)
+  let ev = { type: 'error-name' }
+
+  lambdaHandler(ev, null, function (err, data) {
+    t.equal(err, null, 'cb error argument should be null')
+    t.deepEqual(data, {
+      ok: false,
+      name: 'SomeNamedError',
+      description: 'Some error with name',
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -157,8 +188,9 @@ test('standard response catch text error (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       description: 'Some text error',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -172,8 +204,9 @@ test('standard response catch text error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       description: 'Some text error',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -187,8 +220,25 @@ test('standard response catch object error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
+      description: 'Some error object',
+      format: FORMAT
+    }, 'cb data argument should meet the specification')
+    t.end()
+  })
+})
+
+test('standard response catch object error (async)', t => {
+  let lambdaHandler = standardLambdaResponse(funcAsync)
+  let ev = { type: 'error-obj2' }
+
+  lambdaHandler(ev, null, function (err, data) {
+    t.equal(err, null, 'cb error argument should be null')
+    t.deepEqual(data, {
+      ok: false,
+      name: 'Error',
       description: 'Unknown error',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
@@ -202,8 +252,9 @@ test('standard response catch inner throw (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
+      name: 'Error',
       description: 'Some error thrown',
-      format: '1.1'
+      format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
   })
