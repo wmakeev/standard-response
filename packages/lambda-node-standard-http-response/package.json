@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/wmakeev/standard-response",
   "dependencies": {
-    "@wmakeev/lambda-node-standard-response": "^1.1.1"
+    "@wmakeev/lambda-node-standard-response": "^1.2.0"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
