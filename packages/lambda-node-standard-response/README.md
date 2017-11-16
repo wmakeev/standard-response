@@ -58,10 +58,10 @@ Lambda response in the case `standardResponse` caught an error:
 ```json
 {
   "ok": false,
-  "name": "Error",                     // equal to error.name
-  "description": "Some error message", // equal to error.message field or 'Unknown error' (if handler returns not Error type without not empty message string field or string type error)
-  "error_code": "some code",           // equal to error.code
-  "stack": ['stack trace lines'],      // specified if `options.debug` is true
+  "description": "Some error message",  // equal to error.message field or 'Unknown error' (if handler returns not Error type without not empty message string field or string type error)
+  "error_name": "Error",                // equal to error.name
+  "error_code": "some code",            // equal to error.code
+  "error_stack": ['stack trace lines'], // specified if `options.debug` is true
   "format": "1.2"
 }
 ```

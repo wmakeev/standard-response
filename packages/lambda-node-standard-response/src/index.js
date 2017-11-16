@@ -2,7 +2,7 @@
 
 const isPromise = require('is-promise')
 
-const FORMAT = '1.2'
+const FORMAT = '2.0'
 
 function getMakeCb (options) {
   let debug = !!options.debug
@@ -26,9 +26,9 @@ function getMakeCb (options) {
         description: err.message
       })
 
-      if (err.name) response.name = err.name
+      if (err.name) response.error_name = err.name
 
-      if (debug) response.stack = String(err.stack).split(/\n/)
+      if (debug) response.error_stack = String(err.stack).split(/\n/)
 
       if (err.code != null) response.error_code = err.code
     } else {

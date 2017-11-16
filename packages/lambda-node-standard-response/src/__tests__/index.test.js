@@ -3,7 +3,7 @@
 let test = require('blue-tape')
 let standardLambdaResponse = require('..')
 
-let FORMAT = '1.2'
+let FORMAT = '2.0'
 
 let funcSync = function (ev, ctx) {
   switch (ev.type) {
@@ -106,8 +106,8 @@ test('standard response catch error (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Some error',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -122,8 +122,8 @@ test('standard response catch error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Some error',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -138,9 +138,9 @@ test('standard response catch error with code (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
-      error_code: 404,
       description: 'Some error with code',
+      error_name: 'Error',
+      error_code: 404,
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -155,9 +155,9 @@ test('standard response catch error with code (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
-      error_code: 404,
       description: 'Some error with code',
+      error_name: 'Error',
+      error_code: 404,
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -172,8 +172,8 @@ test('standard response catch error with name (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'SomeNamedError',
       description: 'Some error with name',
+      error_name: 'SomeNamedError',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -188,8 +188,8 @@ test('standard response catch text error (sync)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Some text error',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -204,8 +204,8 @@ test('standard response catch text error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Some text error',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -220,8 +220,8 @@ test('standard response catch object error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Some error object',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -236,8 +236,8 @@ test('standard response catch object error (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Unknown error',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -252,8 +252,8 @@ test('standard response catch inner throw (async)', t => {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
       ok: false,
-      name: 'Error',
       description: 'Some error thrown',
+      error_name: 'Error',
       format: FORMAT
     }, 'cb data argument should meet the specification')
     t.end()
@@ -267,8 +267,8 @@ test('standard response this stack (async)', t => {
   lambdaHandler(ev, null, function (err, data) {
     t.equal(err, null, 'cb error argument should be null')
     t.equal(data.ok, false)
-    t.ok(data.stack instanceof Array)
-    t.equal(data.stack[0], 'Error: Some error thrown')
+    t.ok(data.error_stack instanceof Array)
+    t.equal(data.error_stack[0], 'Error: Some error thrown')
     t.end()
   })
 })
