@@ -47,7 +47,7 @@ Lambda response (same in sync and async cases):
 
 ```json
 {
-  "body": "{\"format\":\"1.1\",\"ok\":true,\"result\":\"Hello world!\"}",
+  "body": "{\"format\":\"2.0\",\"ok\":true,\"result\":\"Hello world!\"}",
   "isBase64Encoded": false,
   "statusCode": 200
 }
