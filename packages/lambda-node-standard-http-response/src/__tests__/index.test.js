@@ -69,7 +69,7 @@ test('standard http response error result (async)', t => {
   lambdaHandler(ev, ctx, function (err, data) {
     t.equal(err, null, 'cb error argument should be null')
     t.deepEqual(data, {
-      body: '{"format":"2.0","ok":false,"description":"Some error","error_name":"Error"}',
+      body: '{"format":"2.0","ok":false,"description":"Some error","name":"Error"}',
       isBase64Encoded: false,
       statusCode: 200
     }, 'cb data argument should meet lambda http response format')
@@ -87,8 +87,8 @@ test('standard http response error result (sync, debug on)', t => {
 
     let body = JSON.parse(data.body)
     t.false(body.ok)
-    t.ok(body.error_stack, 'should include error stack property')
-    t.ok(body.error_stack.length, 'should include error stack lines')
+    t.ok(body.stack, 'should include error stack property')
+    t.ok(body.stack.length, 'should include error stack lines')
 
     t.end()
   })
