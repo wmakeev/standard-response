@@ -1,6 +1,6 @@
 {
   "name": "@wmakeev/lambda-node-standard-http-response",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Standard response spec implementation for aws lambda http request handler function",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/wmakeev/standard-response",
   "dependencies": {
-    "@wmakeev/lambda-node-standard-response": "^2.0.0"
+    "@wmakeev/lambda-node-standard-response": "^2.0.1"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
