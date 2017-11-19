@@ -49,7 +49,7 @@ Lambda response (same in sync and async cases):
 {
   "ok": true,
   "result": "Hello world!",
-  "format": "1.2"
+  "format": "2.0"
 }
 ```
 
@@ -59,10 +59,10 @@ Lambda response in the case `standardResponse` caught an error:
 {
   "ok": false,
   "description": "Some error message",  // equal to error.message field or 'Unknown error' (if handler returns not Error type without not empty message string field or string type error)
-  "error_name": "Error",                // equal to error.name
-  "error_code": "some code",            // equal to error.code
-  "error_stack": ['stack trace lines'], // specified if `options.debug` is true
-  "format": "1.2"
+  "name": "Error",                      // equal to error.name
+  "code": "some code",                  // equal to error.code
+  "stack": ['stack trace lines'],       // specified if `options.debug` is true
+  "format": "2.0"
 }
 ```
 

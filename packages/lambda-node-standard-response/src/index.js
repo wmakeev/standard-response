@@ -26,11 +26,11 @@ function getMakeCb (options) {
         description: err.message
       })
 
-      if (err.name) response.error_name = err.name
+      if (err.name) response.name = err.name
 
-      if (debug) response.error_stack = String(err.stack).split(/\n/)
+      if (debug) response.stack = String(err.stack).split(/\n/)
 
-      if (err.code != null) response.error_code = err.code
+      if (err.code != null) response.code = err.code
     } else {
       Object.assign(response, {
         ok: true,
